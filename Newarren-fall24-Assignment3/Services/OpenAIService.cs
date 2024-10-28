@@ -24,7 +24,7 @@ namespace Newarren_fall24_Assignment3.Services
         {
             // Fetch key and endpoint from configuration
             openAIKey = "8nnDdipUcqXFIBQDKOuQA5MeEQpHQmrAwYzM9kAjN1NLEXjC08cdJQQJ99AJACYeBjFXJ3w3AAABACOG77Tn";  // Must match key in appsettings.json
-            openAIEndpoint = "https://openaiconn.openai.azure.com/openai/deployments/gpt-35-turbo/chat/completions?api-version=2024-08-01-preview";  // Must match endpoint in appsettings.json
+            openAIEndpoint = "https://openaiconn.openai.azure.com/";  // Must match endpoint in appsettings.json
 
             // Check if values were properly retrieved, throw an exception if not
             if (string.IsNullOrEmpty(openAIKey) || string.IsNullOrEmpty(openAIEndpoint))
@@ -47,7 +47,7 @@ namespace Newarren_fall24_Assignment3.Services
 
             var messages = new List<ChatMessage>
             {
-                new SystemChatMessage("When given an actors, create 20 tweets about the actor given. Separate each tweet with '%%%'"),
+                new SystemChatMessage("When given an actor, create 20 tweets about the actor given. Do not Number them. Separate each tweet with '%%%'"),
                 new UserChatMessage($"Write tweets about {reviewee}")
             };
 
@@ -78,6 +78,8 @@ namespace Newarren_fall24_Assignment3.Services
                         reviews.Add(reviewArray[i].Trim());  // Trim any extra whitespace
                     }
 
+
+                    Console.WriteLine(reviews.ToArray());
                     return reviews;
                 }
             }
@@ -94,7 +96,7 @@ namespace Newarren_fall24_Assignment3.Services
             var messages = new List<ChatMessage>
             {
                 new SystemChatMessage("Write 10 short reviews (3-5 sentences) for the given movie, and give a rating out of 10. Separate each review with '%%%'"),
-                new UserChatMessage($"The actor's name is '{reviewee}'. Please write reviews for this actor.")
+                new UserChatMessage($"The movie's name is '{reviewee}'. Please write reviews for this Movie.")
             };
 
 
@@ -107,24 +109,106 @@ namespace Newarren_fall24_Assignment3.Services
             {
                 List<string> reviews = new List<string>();
 
-                // Make the API request for chat completion
                 ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
 
                 if (completion.Content != null)
                 {
-                    // Assuming completion.Content contains the full response as text
                     string fullResponse = completion.Content.First().Text;
 
-                    // Split the response based on the '###' separator
                     var reviewArray = fullResponse.Split(new[] { "%%%" }, StringSplitOptions.RemoveEmptyEntries);
 
-                    // Add each split review to the reviews list
                     for (int i = 0; i < reviewArray.Length; i++)
                     {
-                        reviews.Add(reviewArray[i].Trim());  // Trim any extra whitespace
+                        reviews.Add(reviewArray[i].Trim());
                     }
 
                     return reviews;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
+
+        public async Task<List<string>> GenerateMovieListAsync(string actor)
+        {
+            var messages = new List<ChatMessage>
+            {
+                new SystemChatMessage("Give a list of 5 movies just the title with a given actor. Separate each movie with '%%%', do not number the list"),
+                new UserChatMessage($"The actor's name is '{actor}'. Give me 5 movie titles ")
+            };
+
+
+            var options = new ChatCompletionOptions
+            {
+                Temperature = (float)0.2
+            };
+
+            try
+            {
+                List<string> movies = new List<string>();
+
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
+
+                if (completion.Content != null)
+                {
+                    string fullResponse = completion.Content.First().Text;
+
+                    var reviewArray = fullResponse.Split(new[] { "%%%" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < reviewArray.Length; i++)
+                    {
+                        //removes whitespace
+                        movies.Add(reviewArray[i].Trim());
+                    }
+
+                    return movies;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
+
+        public async Task<List<string>> GenerateActorListAsync(string movie)
+        {
+            var messages = new List<ChatMessage>
+            {
+                new SystemChatMessage("Give a list of 5 actors in a given movie. Separate each actor with '%%%', do not number the list"),
+                new UserChatMessage($"The movie's name is '{movie}'. Give me 5 actors ")
+            };
+
+
+            var options = new ChatCompletionOptions
+            {
+                Temperature = (float)0.2
+            };
+
+            try
+            {
+                List<string> movies = new List<string>();
+
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
+
+                if (completion.Content != null)
+                {
+                    string fullResponse = completion.Content.First().Text;
+
+                    var reviewArray = fullResponse.Split(new[] { "%%%" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int i = 0; i < reviewArray.Length; i++)
+                    {
+                        //removes whitespace
+                        movies.Add(reviewArray[i].Trim());
+                    }
+
+                    return movies;
                 }
             }
             catch (Exception ex)

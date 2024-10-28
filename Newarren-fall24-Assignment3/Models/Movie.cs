@@ -11,6 +11,10 @@ namespace Newarren_fall24_Assignment3.Models
         public string? IMDBLink { get; set; }
         public byte[]? Poster { get; set; }
 
-        public List<string> Reviews { get; set; }
+        public List<string>? Reviews { get; set; } = new List<string>();
+
+        public List<string>? Sentiments { get; set; } = new List<string>();
+
+        public List<string>? Actors { get; set; } = new List<string>();
     }
 }

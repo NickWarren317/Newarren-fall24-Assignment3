@@ -1,59 +1,208 @@
 ﻿@model Newarren_fall24_Assignment3.Models.Movie
 
-<h1>Details</h1>
-<div>
-    <h4>Actor</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Length)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Length)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ReleaseYear)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ReleaseYear)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IMDBLink)
-        </dt>
-        <dd class="col-sm-10">
+
+<div class="content">
+    <div class="left-div">
+        <div>
+            <h4>Movie @Html.DisplayFor(model => model.Name)</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Length)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Length)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ReleaseYear)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ReleaseYear)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IMDBLink)
+                </dt>
+                <dd class="col-sm-10">
+                    <a href="@Model.IMDBLink" target="_blank">@Model.IMDBLink</a>
+                </dd>
+            </dl>
+        </div>
+        <div class="photo">
             @if (Model.Poster != null)
             {
                 var base64 = Convert.ToBase64String(Model.Poster);
                 var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                <img src="@imgSrc" height="100" width="100" />
+                <img src="@imgSrc" class="img_thumbnail" height="100" width="100" />
             }
-        </dd>
-        <dd class="col-sm-10">
-            <a href="@Model.IMDBLink" target="_blank">@Model.IMDBLink</a>
-        </dd>
-    </dl>
-    <dl>
-        <dd>
-            <a asp-action="EditMenu" asp-route-id="@Model.Id">
-                Edit Record
-            </a>
-        </dd>
-        <dd>
-            <a asp-action="ConfirmDelete" asp-route-id="@Model.Id">
-                Delete Record
-            </a>
-        </dd>
+        </div>
+        <div class="options">
+            <dl>
+                <dd>
+                    <a id="edit_button" asp-action="EditMenu" asp-route-id="@Model.Id">
+                        Edit Record
+                    </a>
+                </dd>
+                <dd>
+                    <a id="delete_button" asp-action="ConfirmDelete" asp-route-id="@Model.Id">
+                        Delete Record
+                    </a>
+                </dd>
+                <dd>
+                    <a id="return_button" asp-action="Index">
+                        Go Back
+                    </a>
+                </dd>
+            </dl>
+        </div>
+        <div class="actors">
+            <div class="overall">
+                <h3> Overall Public Opinion</h3>
+                @if (Model.Sentiments != null)
+                {
+                    var overall = 0;
+                    @for (var i = 0; i < Model.Sentiments.Count; i++)
+                    {
+                        @if (@Model.Sentiments[i] == "Positive")
+                        {
+                            overall++;
+                        }
+                        else if (@Model.Sentiments[i] == "Negative")
+                        {
+                            overall--;
+                        }
+                    }
 
-        <dd>
-            <a asp-action="Index">
-                Go Back
-            </a>
-        </dd>
-    </dl>
+                    @if (overall >= 0)
+                    {
+                        <p>Overall Sentiment is Positve!</p>
+                    }
+                    else if (overall < 0)
+                    {
+                        <p> Overall Sentiment is Negative!</p>
+                    }
+                }
+            </div>
+            <div class="actors">
+                @if (Model.Actors != null)
+                {
+                    <h3> Main Actors </h3>
+                    @for (var i = 0; i < Model.Actors.Count; i++)
+                    {
+                        <p> @Model.Actors[i] </p>
+                        <hr />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="right-div">
+        <h3> Reviews</h3>
+        <hr />
+        @if(Model.Reviews != null && Model.Sentiments != null)
+        {
+            @for(var i = 0; i < Model.Reviews.Count; i++)
+            {
+                <p> @Model.Reviews[i] <strong>@Model.Sentiments[i]</strong></p>
+            }
+        }
+        
+    </div>
 </div>
+
+
+
+<style>
+    .content {
+        position: relative; /* Establish a positioning context */
+        width: 100%; /* Full width of the container */
+    }
+
+    .left-div {
+        position: absolute; /* Position absolutely */
+        left: 0; /* Align to the left */
+        top: 100%;
+        padding: 20px;
+        width: 50%;
+        background-color: lightblue; /* Example background */
+    }
+
+    .right-div {
+        position: absolute; /* Position absolutely */
+        right: 0; /* Align to the right */
+        width: 50%;
+        padding: 20px;
+        background-color: lightblue; /* Example background */
+    }
+
+    .img_thumbnail {
+        border: 1px solid #dee2e6; /* Consistent border with Bootstrap */
+        height: 90%;
+        width: 90%;
+        object-fit: cover;
+    }
+
+    h4 {
+        color: #343a40; /* Darker color for the heading */
+    }
+    .options{
+        display: block;
+    }
+    #edit_button{
+        background-color: cadetblue; /* Green background */
+        color: white; /* White text */
+        padding: 5px 10px; /* Padding for the button */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners for the button */
+        transition: background-color 0.3s; /* Smooth transition */
+        display: inline;
+    }
+        #edit_button:hover{
+            background-color: cadetblue; /* Darker green on hover */
+        }
+
+    #delete_button{
+        background-color: cadetblue; /* Green background */
+        color: white; /* White text */
+        padding: 5px 10px; /* Padding for the button */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners for the button */
+        transition: background-color 0.3s; /* Smooth transition */
+        display: inline;
+    }
+        #delete_button:hover{
+            background-color: cadetblue; /* Darker green on hover */
+        }
+    #return_button{
+        background-color: cadetblue; /* Green background */
+        color: white; /* White text */
+        padding: 5px 10px; /* Padding for the button */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners for the button */
+        transition: background-color 0.3s; /* Smooth transition */
+        display: inline;
+    }
+        #delete_button:hover{
+        background-color: cadetblue; /* Darker green on hover */
+        }
+    .photo{
+        height: 300px;
+        width: 300px;
+        display: block;
+    }
+
+    .options dl {
+        display: flex; /* Use flexbox to arrange items */
+        gap: 10px; /* Optional: space between buttons */
+    }
+
+    .options dd {
+        margin: 0; /* Remove default margin from dd */
+    }
+</style>

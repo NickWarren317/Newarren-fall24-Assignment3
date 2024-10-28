@@ -4,6 +4,7 @@ using Newarren_fall24_Assignment3.Data;
 using Newarren_fall24_Assignment3.Models;
 using Newarren_fall24_Assignment3.Services;
 using System.Diagnostics;
+using VaderSharp2;
 
 namespace Newarren_fall24_Assignment3.Controllers
 {
@@ -28,7 +29,44 @@ namespace Newarren_fall24_Assignment3.Controllers
 
             if (ModelState.IsValid)
             {
-                actor.Tweets = await _openAIService.GenerateActorTweetsAsync(actor.Name);
+                var sentiments = new List<string>();
+                var tweets = await _openAIService.GenerateActorTweetsAsync(actor.Name);
+                actor.Tweets = tweets;
+                var photo = Request.Form.Files["Photo"];
+                //sentemental analysis
+                SentimentIntensityAnalyzer analyzer = new SentimentIntensityAnalyzer();
+                foreach (var tweet in tweets)
+                {
+                    var score = 0;
+                    var result = analyzer.PolarityScores(tweet);
+                    string sentiment;
+
+                    if (result.Compound >= 0.05)
+                    {
+                        score++;
+                        sentiment = "Good";
+                    }
+                    else if (result.Compound <= -0.05)
+                    {
+                        score--;
+                        sentiment = "Bad";
+                    }
+                    else
+                    {
+                        sentiment = "Neutral";
+                    }
+
+                    sentiments.Add(sentiment);
+                }
+                if (photo != null && photo.Length > 0)
+                {
+                    using var memoryStream = new MemoryStream();
+                    await photo.CopyToAsync(memoryStream);
+                    actor.Photo = memoryStream.ToArray();
+                }
+
+                actor.Sentiments = sentiments;
+                actor.Movies = await _openAIService.GenerateMovieListAsync(actor.Name);
                 _context.Add(actor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -114,6 +152,7 @@ namespace Newarren_fall24_Assignment3.Controllers
             {
                 try
                 {
+                    var existingActor = await _context.Actors.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
                     if (photo != null && photo.Length > 0) // Check if a new photo was uploaded
                     {
                         using var memoryStream = new MemoryStream();
@@ -122,11 +161,11 @@ namespace Newarren_fall24_Assignment3.Controllers
                     }
                     else
                     {
-                        //If no new photo, fetch the existing actor to retain the current photo
-                        var existingActor = await _context.Actors.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
                         actor.Photo = existingActor.Photo; // Retain the existing photo
                     }
-
+                    actor.Movies = existingActor.Movies;
+                    actor.Sentiments = existingActor.Sentiments;
+                    actor.Tweets = existingActor.Tweets;
                     _context.Update(actor);
                     await _context.SaveChangesAsync();
                 }

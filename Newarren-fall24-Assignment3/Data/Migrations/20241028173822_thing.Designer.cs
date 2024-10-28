@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newarren_fall24_Assignment3.Data;
 
@@ -11,9 +12,11 @@ using Newarren_fall24_Assignment3.Data;
 namespace Newarren_fall24_Assignment3.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241028173822_thing")]
+    partial class thing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,18 +244,12 @@ namespace Newarren_fall24_Assignment3.Data.Migrations
                     b.Property<string>("IMDBLink")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Movies")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Sentiments")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tweets")
                         .HasColumnType("nvarchar(max)");
@@ -269,9 +266,6 @@ namespace Newarren_fall24_Assignment3.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Actors")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IMDBLink")
                         .HasColumnType("nvarchar(max)");
@@ -290,9 +284,6 @@ namespace Newarren_fall24_Assignment3.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Reviews")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sentiments")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

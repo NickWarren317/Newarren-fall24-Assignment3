@@ -2,20 +2,88 @@
 @{
     ViewData["Title"] = "index";
 }
-<h1>Create Movie</h1>
-
-<a asp-action="Create"> Add new Movie </a>
-
-<div class="actor-grid">
+<h1>Movies</h1>
+<hr />
+<a id="add_button" asp-action="Create"> Add new Movie </a>
+<hr />
+<div class="movie-grid">
     @foreach (var movie in Model)
     {
-        <div class="actor-item">
-            <a asp-action="Details" asp-route-id="@movie.Id">
-                <!-- Display movie title above the poster -->
-                <h3>@movie.Name</h3>
-            </a>
+        <div class="bocks">
+
+            <div class="movie-item">
+                <a asp-action="Details" asp-route-id="@movie.Id">
+                    <!-- Display movie title above the poster -->
+                    <p id="name">@movie.Name</p>
+                </a>
+            </div>
+            <div class="movie-poster">
+                @if (movie.Poster != null)
+                {
+                    var base64 = Convert.ToBase64String(movie.Poster);
+                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                    <a asp-action="Details" asp-route-id="@movie.Id">
+                        <img src="@imgSrc" class="img_thumbnail" height="100" width="100" />
+                    </a>
+                }
+            </div>
         </div>
     }
 </div>
+
+<style>
+
+    .img_thumbnail {
+        border: 1px solid #dee2e6;
+        height: 350px;
+        width: 250px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .bocks {
+        display: flex;
+        flex-direction: column; /* Stacks name above photo */
+        align-items: center; /* Center-aligns items */
+        margin: 10px; /* Adds space around each actor item */
+        width: 30%; /* Adjust based on desired size */
+        height: 100%;
+        border-color: black;
+    }
+
+    .movie-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        background-color: lightgray;
+    }
+
+    #add_button {
+        background-color: cadetblue; /* Green background */
+        color: white; /* White text */
+        padding: 5px 10px; /* Padding for the button */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners for the button */
+        transition: background-color 0.3s; /* Smooth transition */
+        display: inline;
+    }
+
+        #add_button:hover {
+            background-color: cadetblue;
+        }
+
+    #name {
+        background-color: cadetblue; /* Green background */
+        color: white; /* White text */
+        padding: 5px 10px;
+        width: 100%;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        display: inline;
+        font-size: 9pt;
+    }
+
+</style>
 
 

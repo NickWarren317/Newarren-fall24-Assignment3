@@ -60,9 +60,56 @@
                 </dd>
             </dl>
         </div>
+        <div class="movies">
+            <div class="overall">
+                <h3> Overall Public Opinion</h3>
+                @if(Model.Sentiments != null)
+                {
+                    var overall = 0;
+                    @for (var i = 0; i < Model.Sentiments.Count; i++)
+                    {
+                        @if(@Model.Sentiments[i] == "Positive")
+                        {
+                            overall++;
+                        }
+                        else if (@Model.Sentiments[i] == "Negative")
+                        {
+                            overall--;
+                        }
+                    }
+
+                    @if(overall >= 0)
+                    {
+                        <p>Overall Sentiment is Positive!</p>
+                    } else if(overall < 0)
+                    {
+                        <p> Overall Sentiment is Negative!</p>
+                    }
+                }
+            </div>
+            <div class="movies">
+                <h3> Previous Works </h3>
+                @if (Model.Movies != null)
+                {
+                    @for (var i = 0; i < Model.Movies.Count; i++)
+                    {
+                        <p> @Model.Movies[i] </p>
+                        <hr />
+                    }
+                }
+            </div>
+        </div>
     </div>
     <div class="right-div">
-         Model.Tweets
+        <h4> Recent Tweets </h4>
+        <hr />
+        @if (Model.Tweets != null && Model.Sentiments != null)
+        {
+            @for (var i = 0; i < Model.Tweets.Count; i++)
+            {
+                <p> @Model.Tweets[i] <strong> @Model.Sentiments[i]</strong></p>
+            }
+        }
     </div>
 </div>
     
@@ -73,26 +120,20 @@
         position: relative; /* Establish a positioning context */
         width: 100%; /* Full width of the container */
     }
-
     .left-div {
         position: absolute; /* Position absolutely */
         left: 0; /* Align to the left */
+        top: 100%;
         padding: 20px;
+        width: 50%;
         background-color: lightblue; /* Example background */
+        
     }
 
     .right-div {
         position: absolute; /* Position absolutely */
         right: 0; /* Align to the right */
-        top: 0;
-        padding: 20px;
-        background-color: lightblue; /* Example background */
-    }
-
-    .right-lower {
-        position: absolute; /* Position absolutely */
-        right: 0; /* Align to the right */
-        top: 100%; /* Position below the right div */
+        width: 50%;
         padding: 20px;
         background-color: lightblue; /* Example background */
     }
