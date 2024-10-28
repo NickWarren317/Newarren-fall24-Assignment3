@@ -10,35 +10,44 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 
 using static System.Environment;
+using System.Drawing.Text;
+using Newarren_fall24_Assignment3.Services;
+/*
+ * Calls Chat GPT API
+ * 
+ */
 
 namespace Newarren_fall24_Assignment3.Services
 {
     public class OpenAIService
     {
         private readonly ChatClient _chatClient;
+        private readonly KeyVaultService _keyVaultService;
         private readonly string openAIKey;
         private readonly string openAIEndpoint;
-        public OpenAIService()
+        public OpenAIService(String openAIKey, String openAIEndpoint)
         {
-            // Fetch key and endpoint from configuration
-            openAIKey = "8nnDdipUcqXFIBQDKOuQA5MeEQpHQmrAwYzM9kAjN1NLEXjC08cdJQQJ99AJACYeBjFXJ3w3AAABACOG77Tn";  // Must match key in appsettings.json
-            openAIEndpoint = "https://openaiconn.openai.azure.com/";  // Must match endpoint in appsettings.json
+            // Replace these values with your Key Vault information
+            // get keys
+            //openAIKey = "8nnDdipUcqXFIBQDKOuQA5MeEQpHQmrAwYzM9kAjN1NLEXjC08cdJQQJ99AJACYeBjFXJ3w3AAABACOG77Tn";  
+           // openAIEndpoint = "https://openaiconn.openai.azure.com/";  
 
-            // Check if values were properly retrieved, throw an exception if not
+            
+            
+
             if (string.IsNullOrEmpty(openAIKey) || string.IsNullOrEmpty(openAIEndpoint))
             {
                 throw new ArgumentNullException("OpenAI key or endpoint not provided in configuration.");
             }
 
-            // Initialize the Azure OpenAI client
             AzureOpenAIClient azureClient = new(
                 new Uri(openAIEndpoint),
                 new ApiKeyCredential(openAIKey));
             var chatClient = azureClient.GetChatClient("gpt-35-turbo");
 
-            // _chatClient is initialized correctly for later use
             _chatClient = chatClient;
         }
 
@@ -61,21 +70,16 @@ namespace Newarren_fall24_Assignment3.Services
             {
                 List<string> reviews = new List<string>();
 
-                // Make the API request for chat completion
                 ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
 
                 if (completion.Content != null)
                 {
-                    // Assuming completion.Content contains the full response as text
                     string fullResponse = completion.Content.First().Text;
 
-                    // Split the response based on the '###' separator
                     var reviewArray = fullResponse.Split(new[] { "%%%" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    // Add each split review to the reviews list
                     for (int i = 0; i < reviewArray.Length; i++)
                     {
-                        reviews.Add(reviewArray[i].Trim());  // Trim any extra whitespace
+                        reviews.Add(reviewArray[i].Trim()); 
                     }
 
 
