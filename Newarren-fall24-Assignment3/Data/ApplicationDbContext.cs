@@ -12,6 +12,6 @@ namespace Newarren_fall24_Assignment3.Data
         }
 
         public DbSet<Movie> Movies {get; set;}
-        public DbSet<Actor>  Actors {get; set;} 
+        public DbSet<Actor> Actors {get; set;} 
     }
 }

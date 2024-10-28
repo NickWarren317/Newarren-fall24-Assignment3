@@ -1,9 +1,6 @@
-﻿
-@model Newarren_fall24_Assignment3.Models.Actor
-
-
+﻿@model Newarren_fall24_Assignment3.Models.Movie
 @{
-	ViewData["Title"] = "Actors";
+    ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
@@ -20,14 +17,14 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" class="form-control" />
-                <span asp-validation-for="Gender" class="text-danger"></span>
+                <label asp-for="Length" class="control-label"></label>
+                <input asp-for="Length" class="form-control" />
+                <span asp-validation-for="Length" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" class="form-control" />
-                <span asp-validation-for="Age" class="text-danger"></span>
+                <label asp-for="ReleaseYear" class="control-label"></label>
+                <input asp-for="ReleaseYear" class="form-control" />
+                <span asp-validation-for="ReleaseYear" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IMDBLink" class="control-label"></label>
@@ -35,9 +32,9 @@
                 <span asp-validation-for="IMDBLink" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Photo" class="control-label"></label>
-                <input type="file" id="Photo" name="Photo" class="form-control" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
+                <label asp-for="Poster" class="control-label"></label>
+                <input type="file" id="Poster" name="Poster" class="form-control" />
+                <span asp-validation-for="Poster" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -46,4 +43,12 @@
     </div>
 </div>
 
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,70 @@
+﻿@model Newarren_fall24_Assignment3.Models.Movie
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div id="box">
+    <div id="confim message">
+        <h2 id="message"> Confirm the Deletion of : @Html.DisplayFor(model => model.Name) </h2>
+    </div>
+    <div id="button_box">
+        <form id="Confirm" asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+            <button id="confirm" type="submit">Confirm</button>
+        </form>
+        <form id="Cancel" asp-action="Index" asp-route-id="@Model.Id" method="post">
+            <button id="cancel" type="submit">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<style>
+
+    #box {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        width: 300px;
+        margin: 50px auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        text-align: center; /* Center text */
+    }
+
+    #confirm-message h2 {
+        font-size: 20px; /* Larger font for the message */
+        color: #333; /* Darker text color */
+        margin-bottom: 20px; /* Space below the message */
+    }
+
+    #button_box {
+        margin-top: 20px; /* Space above the button */
+    }
+
+    #confirm {
+        background-color: #4CAF50; /* Green background */
+        color: white; /* White text */
+        padding: 5px 10px; /* Padding for the button */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners for the button */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+        #confirm:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+    #cancel {
+        background-color: #4CAF50; /* Green background */
+        color: white; /* White text */
+        padding: 5px 10px; /* Padding for the button */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners for the button */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+        #cancel:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+</style>
+

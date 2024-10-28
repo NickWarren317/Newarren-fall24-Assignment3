@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Newarren_fall24_Assignment3.Models.Actor>
+@{
+    ViewData["Title"] = "index";
+}
+
+<style href="~/css/site.css">
+</style>
+<h1>Create Actor</h1>
+
+<a asp-action="Create"> Add new Actor </a>
+
+<div class="actor-grid">
+    @foreach (var actor in Model)
+    {
+        <div class="actor-item">
+             <a asp-action="Details" asp-route-id="@actor.Id">
+             <!-- Display movie title above the poster -->
+             <h3>@actor.Name</h3>
+             </a>
+        </div>
+        <div class="photo">
+            @if (actor.Photo != null)
+            {
+                var base64 = Convert.ToBase64String(actor.Photo);
+                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                <a asp-action="Details" asp-route-id="@actor.Id">
+                    <img src="@imgSrc" class="img_thumbnail" height="100" width="100" />
+                </a>
+            }
+        </div>
+    }
+</div>
+
+
+
+

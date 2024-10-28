@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Newarren_fall24_Assignment3.Models.Movie>
+@{
+    ViewData["Title"] = "index";
+}
+<h1>Create Movie</h1>
+
+<a asp-action="Create"> Add new Movie </a>
+
+<div class="actor-grid">
+    @foreach (var movie in Model)
+    {
+        <div class="actor-item">
+            <a asp-action="Details" asp-route-id="@movie.Id">
+                <!-- Display movie title above the poster -->
+                <h3>@movie.Name</h3>
+            </a>
+        </div>
+    }
+</div>
+
+
