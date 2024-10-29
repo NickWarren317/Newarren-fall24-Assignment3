@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 
 using static System.Environment;
 using System.Drawing.Text;

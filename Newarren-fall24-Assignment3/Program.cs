@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 using Newarren_fall24_Assignment3.Data;
 using Newarren_fall24_Assignment3.Services;
 using System;
 using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Logging.ClearProviders(); // Clear default providers if needed
+builder.Logging.AddConsole(); // Add console logging
+builder.Logging.AddDebug(); // Add debug logging
+builder.Logging.AddEventSourceLogger(); // Add EventSource logging
 // Add services to the container.
 var connectionString = builder.Configuration["mssql_url"] ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -18,8 +19,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddScoped<OpenAIService>();
+
+//OpenAIService openAIService = new OpenAIService(builder.Configuration);
 
 var app = builder.Build();
 
