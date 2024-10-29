@@ -25,16 +25,18 @@ namespace Newarren_fall24_Assignment3.Services
     public class OpenAIService
     {
         private readonly ChatClient _chatClient;
-        private readonly KeyVaultService _keyVaultService;
+        private readonly IConfiguration _config;
         private readonly string openAIKey;
         private readonly string openAIEndpoint;
-        public OpenAIService(String openAIKey, String openAIEndpoint)
+        public OpenAIService(IConfiguration config)
         {
+
+            _config = config;
             // Replace these values with your Key Vault information
             // get keys
-            //openAIKey = "8nnDdipUcqXFIBQDKOuQA5MeEQpHQmrAwYzM9kAjN1NLEXjC08cdJQQJ99AJACYeBjFXJ3w3AAABACOG77Tn";  
-           // openAIEndpoint = "https://openaiconn.openai.azure.com/";  
-
+            
+           openAIEndpoint = "https://openaiconn.openai.azure.com/";
+           openAIKey = _config["openai_key"];
             
             
 
